@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "19557187901",
+    "firebase_url": "https://jumputanapps-default-rtdb.firebaseio.com",
+    "project_id": "jumputanapps",
+    "storage_bucket": "jumputanapps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19557187901:android:7cb8d147e3dc04c3bf4554",
+        "android_client_info": {
+          "package_name": "com.kakakhai.JumputanApps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPt8knVA1aKsiPf2wTR1eyQbn9uBU-hCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19557187901:android:357e017a90084047bf4554",
+        "android_client_info": {
+          "package_name": "com.kakakhai.JumputanProject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPt8knVA1aKsiPf2wTR1eyQbn9uBU-hCI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

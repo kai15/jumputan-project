@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "JumputanProject",
+    "name": "Jumputan Merak Mobile",
     "slug": "JumputanProject",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,16 +15,27 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kakakhai.JumputanProject"
     },
     "android": {
+      "googleServicesFile": "google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.kakakhai.JumputanProject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "700273e7-2f46-4ad5-8623-e8b57a1d15e9"
+      }
+    },
+    "plugins": [
+      "@react-native-firebase/app"
+    ]
   }
 }
