@@ -36,6 +36,10 @@
     },
     "plugins": [
       "@react-native-firebase/app"
-    ]
+    ],
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/700273e7-2f46-4ad5-8623-e8b57a1d15e9"
+    }
   }
 }

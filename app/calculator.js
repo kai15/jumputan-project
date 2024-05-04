@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import {StyleSheet, View, Pressable, Text, TextInput, FlatList} from 'react-native';
+import {StyleSheet, View, Pressable, Text, TextInput, FlatList, Modal} from 'react-native';
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {useEffect, useState} from "react";
 import firestore from '@react-native-firebase/firestore';
@@ -10,8 +10,10 @@ export default function Calculator() {
     const navigation = useNavigation();
     const [data, setData] = useState([]);
     const [calc, setCalc] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
     const [selected, setSelected] = useState("");
     const [grandTotal, setGrandTotal] = useState(0);
+    const [dpAmount, setDpAmount] = useState(0);
 
     let datas = Object.assign([], calc);
     let grandTotals = Object.assign(0, grandTotal);
@@ -38,6 +40,7 @@ export default function Calculator() {
                     listCalc.forEach(element => {
                         setGrandTotal(grandTotals += element.catalog_amount);
                     });
+                    setGrandTotal(grandTotals - dpAmount);
                     // querySnapshot.forEach(documentSnapshot => {
                     // });
                     setCalc(listCalc);
@@ -75,7 +78,13 @@ export default function Calculator() {
         datas.forEach(element => {
             setGrandTotal(grandTotals += element.catalog_amount);
         });
+        setGrandTotal(grandTotals - dpAmount);
         setCalc(datas)
+    }
+
+    const handleAddDP = () => {
+        setGrandTotal(Number(grandTotal) - Number(dpAmount));
+        setModalVisible(false);
     }
 
     return (
@@ -114,6 +123,7 @@ export default function Calculator() {
                                         datas.forEach(element => {
                                             setGrandTotal(grandTotals += element.catalog_amount);
                                         });
+                                        setGrandTotal(grandTotals - dpAmount);
                                         setCalc(datas)
                                     }}
                                     value={String(item.catalog_total)}
@@ -150,18 +160,11 @@ export default function Calculator() {
                 )}
             />
             <View style={styles.buttonAdd}>
-                <View style={{paddingTop: 10, paddingBottom: 10, justifyContent: "center"}}>
-                    <Pressable
-                        style={[styles.button, styles.buttonClose, {backgroundColor: "yellow", borderRadius: 5}]}
-                        onPress={() => navigation.navigate("Report", {data: calc, grandTotal})}>
-                        <Text style={{color: "#000", textAlign: "center", fontWeight: "bold"}}>
-                        <FontAwesome
-                            name={"file-text"}
-                            size={18}
-                            color="#25292e"
-                            style={{textAlign: "center", paddingRight: 5}}
-                        /> Lihat Nota </Text>
-                    </Pressable>
+                <View
+                    style={{flexDirection: "row", alignItems: 'center', paddingHorizontal: 15, paddingVertical: 5, borderRadius: 10, justifyContent: "space-between", marginBottom: 10}}
+                >
+                    <Text style={{ color: "#25292e", textAlign: "right", fontWeight: "bold", fontSize: 16}}>{"DP"}</Text>
+                    <Text style={[styles.buttonLabel, { color: "#25292e", textAlign: "right", fontWeight: "bold", fontSize: 16 }]}>IDR {dpAmount ? dpAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 0}</Text>
                 </View>
                 <View
                     style={{flexDirection: "row", alignItems: 'center', backgroundColor: "#FFD8D8", padding: 15, borderRadius: 10, justifyContent: "space-between"}}
@@ -169,8 +172,67 @@ export default function Calculator() {
                     <Text style={{ color: "#25292e", textAlign: "right", fontWeight: "bold", fontSize: 16}}>{"Total"}</Text>
                     <Text style={[styles.buttonLabel, { color: "#25292e", textAlign: "right", fontWeight: "bold", fontSize: 16 }]}>IDR {grandTotal ? grandTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 0}</Text>
                 </View>
-
+                <View style={{paddingTop: 10, justifyContent: "center", flexDirection: "row", gap: 10}}>
+                    <Pressable
+                        style={[styles.button, styles.buttonClose, {backgroundColor: "#CCC", flex: 1}]}
+                        onPress={() => navigation.navigate("Report", {data: calc, grandTotal, dpAmount})}>
+                        <Text style={{color: "#000", textAlign: "center", fontWeight: "bold"}}>
+                            <FontAwesome
+                                name={"file-text"}
+                                size={18}
+                                color="#25292e"
+                                style={{textAlign: "center", paddingRight: 5}}
+                            /> Lihat Nota </Text>
+                    </Pressable>
+                    <Pressable
+                        style={[styles.button, styles.buttonClose, {backgroundColor: "#CCC", flex: 1}]}
+                        onPress={() => setModalVisible(true)}>
+                        <Text style={{color: "#000", textAlign: "center", fontWeight: "bold"}}>
+                            <FontAwesome
+                                name={"plus"}
+                                size={18}
+                                color="#25292e"
+                                style={{textAlign: "center", paddingRight: 5}}
+                            /> Tambah DP </Text>
+                    </Pressable>
+                </View>
             </View>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Pressable
+                            style={{flexDirection: "row", alignItems: 'center', borderRadius: 10, marginBottom: 10}}
+                            onPress={() => setModalVisible(false)}
+                        >
+                            <FontAwesome
+                                name={"close"}
+                                size={22}
+                                color="#25292e"
+                                style={{marginRight: 10}}
+                            />
+                            <Text style={styles.modalText}>Add DP</Text>
+                        </Pressable>
+
+                        <Text style={{marginTop: 15, marginBottom: 5}}>DP Amount</Text>
+                        <TextInput
+                            style={styles.inputDP}
+                            onChangeText={(value) => setDpAmount(value)}
+                            value={dpAmount}
+                            placeholder="example: 100000"
+                            keyboardType="numeric"
+                        />
+                        <Pressable
+                            style={[styles.button, styles.buttonClose]}
+                            onPress={() => handleAddDP()}>
+                            <Text style={styles.textStyle}>Save</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
             <StatusBar style="auto" />
         </View>
     );
@@ -224,5 +286,27 @@ const styles = StyleSheet.create({
         // padding: 10,
         borderRadius: 5,
         textAlign: 'center',
+    },
+    inputDP: {
+        width: 300,
+        height: 44,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
+        textAlign: 'left',
+        marginBottom: 10
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
     },
 });

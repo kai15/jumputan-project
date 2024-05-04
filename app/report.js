@@ -7,12 +7,14 @@ const ttdImage = require('../assets/ttd.png');
 
 export default function Report({route}) {
     const [grandTotal, setGrandTotal] = useState(0);
+    const [dpAmount, setDpAmount] = useState(0);
     const [nota, setNota] = useState([])
 
     useEffect(() => {
         if (route && route.params) {
             setNota(route.params.data);
             setGrandTotal(route.params.grandTotal);
+            setDpAmount(route.params.dpAmount);
         }
     }, []);
 
@@ -88,8 +90,13 @@ export default function Report({route}) {
                     )}
                 />
 
+                {/*DP*/}
+                {(dpAmount > 0) ? <View style={{...styles.containerTotal, borderBottomWidth: 1, borderBottomColor: "#CCC"}}>
+                    <Text style={{ color: "red", textAlign: "right", fontWeight: "normal", fontSize: 14}}>{"DP Rp."} {dpAmount ? dpAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 0}</Text>
+                </View> : null}
+
                 {/*Grand Total*/}
-                <View style={{flexDirection: "row", alignItems: 'center', backgroundColor: "#EAEAEA", justifyContent: "flex-end", marginLeft: 10, marginRight: 10, paddingTop: 10, paddingBottom: 10, paddingLeft: 5, paddingRight: 5}}>
+                <View style={styles.containerTotal}>
                     <Text style={{ color: "#25292e", textAlign: "right", fontWeight: "bold", fontSize: 15}}>{"Jumlah Rp."} {grandTotal ? grandTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : 0}</Text>
                 </View>
 
@@ -163,4 +170,16 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         textAlign: 'center',
     },
+    containerTotal: {
+        flexDirection: "row",
+        alignItems: 'center',
+        backgroundColor: "#EAEAEA",
+        justifyContent: "flex-end",
+        marginLeft: 10,
+        marginRight: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 5,
+        paddingRight: 5
+    }
 });
